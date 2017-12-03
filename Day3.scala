@@ -5,8 +5,8 @@ val input = 1024 // Your input
 type Position = (Int, Int)
 
 def nextPosition(x: Int, y: Int) = {
-  val ax = Math.abs(x);
-  val ay = Math.abs(y);
+  val ax = Math.abs(x)
+  val ay = Math.abs(y)
 
   if (y > 0 && ax <= ay)      (x + 1, y)
   else if (x < 0 && ay <= ax) (x,     y + 1)

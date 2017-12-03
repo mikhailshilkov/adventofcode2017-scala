@@ -1,3 +1,5 @@
+import scala.annotation.tailrec
+
 val input = 1024 // Your input
 
 type Position = (Int, Int)
@@ -14,8 +16,9 @@ def nextPosition(x: Int, y: Int) = {
 
 // Part 1
 
-def mahattanDistance(search:Int) = {
+def manhattanDistance(search:Int) = {
   
+  @tailrec
   def impl (search: Int, pos: Position, value: Int): Int = {
     val (x, y) = pos
     if (value == search) Math.abs(x) + Math.abs(y)
@@ -27,10 +30,10 @@ def mahattanDistance(search:Int) = {
   impl(search, (1, 0), 2)
 }
 
-println(mahattanDistance(input))
+println(manhattanDistance(input))
 
 //// Mathy faster version
-// def mahattanDistance(number: Int) = {
+// def manhattanDistance(number: Int) = {
 //   val sqrt = Math.sqrt(number).ceil.toInt
 //   val circle = if (sqrt % 2 == 1) sqrt else sqrt + 1 
 //   val stepsInside = (circle - 1) / 2
@@ -53,7 +56,8 @@ def findSpiralSum(search: Int) = {
      yield traversed(xx, yy))
     .sum
   }
-  
+
+  @tailrec
   def impl (search: Int, pos: Position, traversed: Spiral): Int = {
     val (x, y) = pos
     val value = neighborSum(x, y, traversed)
@@ -68,4 +72,4 @@ def findSpiralSum(search: Int) = {
   impl(search, (1, 0), initial)
 }
 
-println(findSpiralSum(input))
+println(findSpiralSum(input))// Start writing your ScalaFiddle code here

@@ -30,7 +30,7 @@ def manhattanDistance(search:Int) = {
   impl(search, (1, 0), 2)
 }
 
-println(manhattanDistance(input))
+println("d3p1> " + manhattanDistance(input))
 
 //// Mathy faster version
 // def manhattanDistance(number: Int) = {
@@ -72,4 +72,4 @@ def findSpiralSum(search: Int) = {
   impl(search, (1, 0), initial)
 }
 
-println(findSpiralSum(input))// Start writing your ScalaFiddle code here
+println("d3p2> " + findSpiralSum(input))// Start writing your ScalaFiddle code here

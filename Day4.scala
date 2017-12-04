@@ -5,17 +5,14 @@ def parseMultiline(text: String) = {
     .map(_.trim().split("\\s+").toList)
 }
 
-def countValidPhrases[T](text: String, f: String => T) = {
+def countValidPhrases[T](f: String => T)(text: String) = {
   parseMultiline(text)
-  .filter(s => s.length == s.map(f).distinct.length)
+  .filter(phrase => phrase.length == phrase.map(f).distinct.length)
   .length
 }
 
-def countUniqueWords(text: String) = 
-  countValidPhrases(text, identity)
-
-def countUniqueAnagrams(text: String) = 
-  countValidPhrases(text, _.toList.sorted)
+def countUniqueWords = countValidPhrases(identity)(_)
+def countUniqueAnagrams = countValidPhrases(_.toList.sorted)(_)
 
 val input = """
 aa bb cc

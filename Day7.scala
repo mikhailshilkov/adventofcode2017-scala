@@ -19,7 +19,7 @@ def parseLines(text: String) = {
 // Building the tree from flat Line list
 sealed trait Node
 case class Branch(name: String, value: Int, children: List[Node]) extends Node
-case class Leaf(name: String, value: Int) extends Node
+case class Leaf(value: Int) extends Node
 
 def buildTree(lines: List[Line]) = {
   
@@ -27,7 +27,7 @@ def buildTree(lines: List[Line]) = {
     lines
       .filter(_.name == name)
       .map(line => {
-        if (line.children.isEmpty) Leaf(line.name, line.value)
+        if (line.children.isEmpty) Leaf(line.value)
         else Branch(line.name, line.value, line.children.flatMap(buildNode))
       })
   }
@@ -43,7 +43,7 @@ case class FoundUnbalanced(desiredWeight: Int) extends SearchResult
 case class NodeInfo(totalWeight: Int, ownWeight: Int) extends SearchResult
 
 def findUnbalanced(node: Node): SearchResult = node match {
-  case Leaf(_, value) => NodeInfo(value, value)
+  case Leaf(value) => NodeInfo(value, value)
   case Branch(_, value, children) => {
     val subs = children.map(findUnbalanced)
     val foundItem = subs.find { 

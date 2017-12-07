@@ -17,43 +17,51 @@ def parseLines(text: String) = {
 }
 
 // Building the tree from flat Line list
-case class Node(name: String, value: Int, children: List[Node])
+sealed trait Node
+case class Branch(name: String, value: Int, children: List[Node]) extends Node
+case class Leaf(name: String, value: Int) extends Node
 
 def buildTree(lines: List[Line]) = {
   
   def buildNode(name: String): List[Node] = {
     lines
       .filter(_.name == name)
-      .map(line => Node(line.name, line.value, line.children.flatMap(buildNode)))
+      .map(line => {
+        if (line.children.isEmpty) Leaf(line.name, line.value)
+        else Branch(line.name, line.value, line.children.flatMap(buildNode))
+      })
   }
   
   val allChildren = lines.flatMap(_.children)
   val root = lines.filterNot(i => allChildren contains i.name)(0)
-  Node(root.name, root.value, root.children.flatMap(buildNode))
+  Branch(root.name, root.value, root.children.flatMap(buildNode))
 }
 
 // Finding unbalanced disk
-type FoundUnbalanced = Int
-case class NodeInfo(totalWeight: Int, node: Node)
+sealed trait SearchResult
+case class FoundUnbalanced(desiredWeight: Int) extends SearchResult
+case class NodeInfo(totalWeight: Int, ownWeight: Int) extends SearchResult
 
-def findUnbalanced(node: Node): Either[NodeInfo, FoundUnbalanced] = {
-  // If that's a Leaf, just return itself
-  if (node.children.isEmpty) Left(NodeInfo(node.value, node))
-  else {
-    val subs = node.children.map(findUnbalanced)
-    (subs.find(_.isRight)) match {
-      // If unbalanced already found in children, just propogate up
+def findUnbalanced(node: Node): SearchResult = node match {
+  case Leaf(_, value) => NodeInfo(value, value)
+  case Branch(_, value, children) => {
+    val subs = children.map(findUnbalanced)
+    val foundItem = subs.find { 
+      case FoundUnbalanced(v) => true
+      case _ => false
+    }
+    foundItem match {
       case Some(diff) => diff
       case None => {
-        val values = subs.collect { case Left(l) => l }
+        val values = subs.collect { case NodeInfo(t, o) => NodeInfo(t, o) }
         val groups = values.groupBy(_.totalWeight).values
         // If all sums are equal, return total weight
-        if (groups.size == 1) Left(NodeInfo(values.map(_.totalWeight).sum + node.value, node))
+        if (groups.size == 1) NodeInfo(values.map(_.totalWeight).sum + value, value)
         else {
           // If sums are different, we found the victim, so calculate desired weight and return
           val min = groups.minBy(_.size).head
           val max = groups.maxBy(_.size).head
-          Right(min.node.value + max.totalWeight - min.totalWeight)
+          FoundUnbalanced(min.ownWeight + max.totalWeight - min.totalWeight)
         }
       }
     }
@@ -63,7 +71,7 @@ def findUnbalanced(node: Node): Either[NodeInfo, FoundUnbalanced] = {
 def findUnbalancedDisk(text: String) = {
   val lines = parseLines(text)
   val tree = buildTree(lines)
-  findUnbalanced(tree) match { case Right(r) => r }
+  findUnbalanced(tree) match { case FoundUnbalanced(d) => d }
 }
 
 // Run it

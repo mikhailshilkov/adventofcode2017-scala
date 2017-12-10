@@ -1,3 +1,5 @@
+import scala.annotation.tailrec
+
 def step(vector: Vector[Int], position: Int, length: Int): Vector[Int] = {
   val overflowIndex = if (position + length > vector.length) (position + length) % vector.length else 0
   vector
@@ -14,6 +16,7 @@ def step(vector: Vector[Int], position: Int, length: Int): Vector[Int] = {
 }
 
 def permutate(lengths: List[Int]) = {
+  @tailrec
   def impl(lengths: List[Int], vector: Vector[Int], position: Int, skip: Int): Vector[Int] = lengths match {
     case List() => vector
     case l :: rem => {
@@ -49,6 +52,6 @@ def run2(line: String) = {
   hex
 }
 
-val input = "AoC 2017" // Your input
+val input = "1,2,3" // Your input
 println("d10p1>" + run1(input))
 println("d10p2>" + run2(input))

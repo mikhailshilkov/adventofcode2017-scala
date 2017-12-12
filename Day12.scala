@@ -36,5 +36,5 @@ val input = """
 """ // Your input
 
 val graph = parseGraph(input)
-println("d12> " + traverse(graph, 0).size)
-println("d12> " + countGroups(graph))
+println("d12 p1> " + traverse(graph, 0).size)
+println("d12 p2> " + countGroups(graph))

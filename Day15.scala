@@ -25,4 +25,4 @@ println("d15p1> " + generatorsMatch(40000000, g1a, g1b))
 
 val g2a = gen2(input._1, 16807, _ % 4 == 0)
 val g2b = gen2(input._2, 48271, _ % 8 == 0)
-println("d15p2> " + generatorsMatch(500000, g2a, g2b))
+println("d15p2> " + generatorsMatch(5000000, g2a, g2b))

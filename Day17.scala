@@ -21,6 +21,6 @@ def findAfterZero(step: Int, count: Int) = {
 } 
 
 
-val input = 304 // Your input
+val input = 3 // Your input
 println(findAfterLast(input, 2017))
-println(findAfterZero(input, 5000000))
+println(findAfterZero(input, 50000000))

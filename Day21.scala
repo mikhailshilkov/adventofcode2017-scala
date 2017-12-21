@@ -82,8 +82,9 @@ def solve(input: String, count: Int) = {
 }
 
 val input = """
-
-"""
+../.# => ##./#../...
+.#./..#/### => #..#/..../..../#..
+""" // Your input
 
 println("d21p1> " + solve(input, 5))
 println("d21p2> " + solve(input, 18))
